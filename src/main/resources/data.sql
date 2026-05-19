@@ -1,3 +1,6 @@
+INSERT INTO member (name, role)
+VALUES ('관리자', 'ADMIN');
+
 INSERT INTO theme (name, description, thumbnail_image_url, is_active)
 VALUES ('화이트노이즈', '실험실에 남겨진 단서를 수집해 기묘한 송출 사고의 원인을 밝혀내는 SF 추리 테마', 'https://picsum.photos/seed/whitenoise/800/600',
         1),

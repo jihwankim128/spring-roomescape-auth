@@ -9,6 +9,14 @@ CREATE TABLE theme
     CONSTRAINT uk_theme_name UNIQUE (name)
 );
 
+CREATE TABLE member (
+    id   BIGINT      NOT NULL AUTO_INCREMENT,
+    name VARCHAR(20) NOT NULL,
+    role VARCHAR(20) NOT NULL DEFAULT 'USER',
+    PRIMARY KEY (id),
+    CONSTRAINT uk_member_name UNIQUE (name)
+);
+
 CREATE TABLE reservation_time (
     id       BIGINT       NOT NULL AUTO_INCREMENT,
     start_at TIME         NOT NULL,
