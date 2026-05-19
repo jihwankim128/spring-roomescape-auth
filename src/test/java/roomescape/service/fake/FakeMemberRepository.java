@@ -31,6 +31,13 @@ public class FakeMemberRepository implements MemberRepository {
     }
 
     @Override
+    public Optional<Member> findByName(String name) {
+        return members.values().stream()
+                .filter(member -> member.getName().equals(name))
+                .findFirst();
+    }
+
+    @Override
     public boolean existsByName(String name) {
         return members.values().stream()
                 .anyMatch(member -> member.getName().equals(name));

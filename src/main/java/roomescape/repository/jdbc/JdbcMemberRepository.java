@@ -49,6 +49,17 @@ public class JdbcMemberRepository implements MemberRepository {
     }
 
     @Override
+    public Optional<Member> findByName(String name) {
+        try {
+            String sql = "SELECT * FROM member WHERE name = ?";
+            Member member = jdbcTemplate.queryForObject(sql, MEMBER_MAPPER, name);
+            return Optional.ofNullable(member);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public boolean existsByName(String name) {
         String sql = "SELECT EXISTS (SELECT 1 FROM member WHERE name = ?)";
         Boolean result = jdbcTemplate.queryForObject(sql, Boolean.class, name);

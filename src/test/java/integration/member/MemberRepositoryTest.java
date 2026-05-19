@@ -55,6 +55,19 @@ class MemberRepositoryTest extends BaseIntegrationTest {
     }
 
     @Test
+    void 이름으로_멤버를_조회할_수_있다() {
+        // given
+        memberRepository.save(new Member("이프"));
+
+        // when & then
+        assertThat(memberRepository.findByName("이프"))
+                .isPresent()
+                .get()
+                .extracting(Member::getName, Member::getRole)
+                .containsExactly("이프", MemberRole.USER);
+    }
+
+    @Test
     void 같은_이름의_멤버를_저장하면_제약_위반_예외가_발생한다() {
         // given
         Member member = new Member("이프");
