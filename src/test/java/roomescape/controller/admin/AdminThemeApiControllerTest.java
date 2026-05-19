@@ -23,6 +23,7 @@ import roomescape.controller.BaseControllerUnitTest;
 import roomescape.controller.admin.api.AdminThemeApiController;
 import roomescape.controller.admin.api.dto.AdminThemeRequest;
 import roomescape.controller.admin.api.dto.AdminThemeResponse;
+import roomescape.repository.MemberRepository;
 import roomescape.service.ThemeService;
 import roomescape.service.command.ThemeRegisterCommand;
 import roomescape.service.result.ThemeRegisterResult;
@@ -32,10 +33,13 @@ class AdminThemeApiControllerTest extends BaseControllerUnitTest {
 
     @MockitoBean
     private ThemeService themeService;
+    @MockitoBean
+    private MemberRepository memberRepository;
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext) {
         mockMvcSetting(webApplicationContext);
+        mockAdmin(memberRepository);
     }
 
     @Test
@@ -49,7 +53,7 @@ class AdminThemeApiControllerTest extends BaseControllerUnitTest {
         AdminThemeResponse expected = AdminThemeResponse.from(result);
 
         // when : admin 헤더를 포함해서 요청한다.
-        AdminThemeResponse response = RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
+        AdminThemeResponse response = RestAssuredMockMvc.given().spec(adminSpec()).log().all()
                 .body(body)
                 .when().post("/api/admin/themes")
                 .then().log().all()
@@ -67,7 +71,7 @@ class AdminThemeApiControllerTest extends BaseControllerUnitTest {
         // given: 실패하는 request body가 주어짐
 
         // when & then: validation 위반으로 400 Bad Request가 발생한다.
-        RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
+        RestAssuredMockMvc.given().spec(adminSpec()).log().all()
                 .body(body)
                 .when().post("/api/admin/themes")
                 .then().log().all()
@@ -78,7 +82,7 @@ class AdminThemeApiControllerTest extends BaseControllerUnitTest {
     @Test
     void 관리자가_특정_테마_비활성화_요청_시_204_NoContent를_응답한다() {
         // when & then: 관리자 헤더를 포함해서 요청했을 때, 삭제 로직을 수행한다.
-        RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
+        RestAssuredMockMvc.given().spec(adminSpec()).log().all()
                 .when().patch("/api/admin/themes/{id}/deactivate", 1L)
                 .then().log().all()
                 .status(HttpStatus.NO_CONTENT);
@@ -90,7 +94,7 @@ class AdminThemeApiControllerTest extends BaseControllerUnitTest {
     @ValueSource(longs = {0, -1})
     void 관리자가_잘못된_테마_식별자로_비활성화_요청_시_예외가_발생한다(Long invalidId) {
         // when & then: 관리자 헤더를 포함해서 음수 식별자로 요청했을 때, 예외 발생
-        RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
+        RestAssuredMockMvc.given().spec(adminSpec()).log().all()
                 .when().patch("/api/admin/themes/{id}/deactivate", invalidId)
                 .then().log().all()
                 .status(HttpStatus.BAD_REQUEST)
@@ -100,7 +104,7 @@ class AdminThemeApiControllerTest extends BaseControllerUnitTest {
     @Test
     void 관리자가_특정_테마_활성화_요청_시_204_NoContent를_응답한다() {
         // when & then: 관리자 헤더를 포함해서 요청했을 때, 삭제 로직을 수행한다.
-        RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
+        RestAssuredMockMvc.given().spec(adminSpec()).log().all()
                 .when().patch("/api/admin/themes/{id}/activate", 1L)
                 .then().log().all()
                 .status(HttpStatus.NO_CONTENT);
@@ -112,7 +116,7 @@ class AdminThemeApiControllerTest extends BaseControllerUnitTest {
     @ValueSource(longs = {0, -1})
     void 관리자가_잘못된_테마_식별자로_활성화_요청_시_예외가_발생한다(Long invalidId) {
         // when & then: 관리자 헤더를 포함해서 음수 식별자로 요청했을 때, 예외 발생
-        RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
+        RestAssuredMockMvc.given().spec(adminSpec()).log().all()
                 .when().patch("/api/admin/themes/{id}/activate", invalidId)
                 .then().log().all()
                 .status(HttpStatus.BAD_REQUEST)

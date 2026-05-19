@@ -21,7 +21,7 @@ class MemberTest {
         // then
         assertThat(member)
                 .extracting(Member::getId, Member::getName, Member::getRole)
-                .containsExactly(null, name, MemberRole.USER);
+                .containsExactly(null, name, MemberRole.MEMBER);
     }
 
     @ParameterizedTest

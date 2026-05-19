@@ -1,4 +1,4 @@
-package roomescape.common;
+package roomescape.global.auth;
 
 public record MemberPrincipal(String name) {
 

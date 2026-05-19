@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.admin.api.dto.AdminReservationTimeRequest;
 import roomescape.controller.admin.api.dto.AdminReservationTimeResponse;
+import roomescape.global.auth.PreAuth;
 import roomescape.service.ReservationTimeService;
 import roomescape.service.result.ReservationTimeResult;
 
@@ -24,6 +25,7 @@ import roomescape.service.result.ReservationTimeResult;
 @RequestMapping("/api/admin/times")
 @Validated
 @RequiredArgsConstructor
+@PreAuth(role = "ADMIN")
 public class AdminReservationTimeApiController {
 
     private final ReservationTimeService reservationTimeService;

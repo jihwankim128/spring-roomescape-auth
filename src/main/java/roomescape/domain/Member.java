@@ -22,7 +22,7 @@ public class Member {
     }
 
     public Member(String name) {
-        this(null, name, MemberRole.USER);
+        this(null, name, MemberRole.MEMBER);
     }
 
     private static void validateName(String name) {

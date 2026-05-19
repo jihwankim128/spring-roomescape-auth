@@ -15,7 +15,7 @@ public record ReservationChangeRequest(
         Long timeId
 ) {
 
-    public ReservationCommand toCommand() {
-        return new ReservationCommand(null, date, null, timeId);
+    public ReservationCommand toCommand(String name) {
+        return new ReservationCommand(name, date, null, timeId);
     }
 }

@@ -2,10 +2,12 @@ package roomescape.controller.client.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import roomescape.global.auth.PreAuth;
 
 @Controller
 public class PageController {
 
+    @PreAuth
     @GetMapping("/reserve")
     public String reserve() {
         return "forward:/reservation.html";
@@ -21,6 +23,7 @@ public class PageController {
         return "forward:/index.html";
     }
 
+    @PreAuth
     @GetMapping("/search")
     public String search() {
         return "forward:/search.html";

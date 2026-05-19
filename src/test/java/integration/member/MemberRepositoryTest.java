@@ -39,7 +39,7 @@ class MemberRepositoryTest extends BaseIntegrationTest {
                 .isPresent()
                 .get()
                 .extracting(Member::getName, Member::getRole)
-                .containsExactly("이프", MemberRole.USER);
+                .containsExactly("이프", MemberRole.MEMBER);
     }
 
     @Test
@@ -64,7 +64,7 @@ class MemberRepositoryTest extends BaseIntegrationTest {
                 .isPresent()
                 .get()
                 .extracting(Member::getName, Member::getRole)
-                .containsExactly("이프", MemberRole.USER);
+                .containsExactly("이프", MemberRole.MEMBER);
     }
 
     @Test

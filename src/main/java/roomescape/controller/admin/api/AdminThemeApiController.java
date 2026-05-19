@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.admin.api.dto.AdminThemeRequest;
 import roomescape.controller.admin.api.dto.AdminThemeResponse;
+import roomescape.global.auth.PreAuth;
 import roomescape.service.ThemeService;
 import roomescape.service.result.ThemeRegisterResult;
 
@@ -24,6 +25,7 @@ import roomescape.service.result.ThemeRegisterResult;
 @RestController
 @RequiredArgsConstructor
 @Validated
+@PreAuth(role = "ADMIN")
 public class AdminThemeApiController {
 
     private final ThemeService themeService;

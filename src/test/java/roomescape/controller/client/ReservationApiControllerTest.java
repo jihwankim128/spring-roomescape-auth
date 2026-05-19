@@ -3,6 +3,7 @@ package roomescape.controller.client;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -22,6 +23,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.context.WebApplicationContext;
+import roomescape.global.auth.MemberPrincipal;
 import roomescape.common.Page;
 import roomescape.common.Pageable;
 import roomescape.controller.BaseControllerUnitTest;
@@ -30,9 +32,12 @@ import roomescape.controller.client.api.dto.ReservationChangeRequest;
 import roomescape.controller.client.api.dto.ReservationRequest;
 import roomescape.controller.client.api.dto.ReservationResponse;
 import roomescape.controller.client.fixture.ReservationApiRequestFixture;
+import roomescape.domain.Member;
+import roomescape.domain.MemberRole;
 import roomescape.query.ReservationQuery;
 import roomescape.query.ReservationSearchCondition;
 import roomescape.query.ReservationSearchResponse;
+import roomescape.repository.MemberRepository;
 import roomescape.service.ReservationService;
 import roomescape.service.command.ReservationCommand;
 import roomescape.service.fixture.ReservationServiceFixture;
@@ -41,14 +46,20 @@ import roomescape.service.result.ReservationResult;
 @WebMvcTest(ReservationApiController.class)
 class ReservationApiControllerTest extends BaseControllerUnitTest {
 
+    private static final MemberPrincipal PRINCIPAL = new MemberPrincipal("이프");
+
     @MockitoBean
     private ReservationService reservationService;
     @MockitoBean
     private ReservationQuery reservationQuery;
+    @MockitoBean
+    private MemberRepository memberRepository;
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext) {
         mockMvcSetting(webApplicationContext);
+        when(memberRepository.findByName(PRINCIPAL.name()))
+                .thenReturn(java.util.Optional.of(new Member(1L, PRINCIPAL.name(), MemberRole.MEMBER)));
     }
 
     @ParameterizedTest(name = "요청 정보가 {0} 일 때, 예외 메세지 \"{1}\"가 발생한다.")
@@ -56,7 +67,7 @@ class ReservationApiControllerTest extends BaseControllerUnitTest {
     void 예약_요청_시_형식_검증에_실패하면_예외가_발생한다(ReservationRequest body, String exceptionMessage) {
         // given: 실패하는 request body가 주어짐
         // when & then
-        RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
+        RestAssuredMockMvc.given().spec(authenticatedSpec(PRINCIPAL)).log().all()
                 .body(body)
                 .when().post("/api/reservations")
                 .then().log().all()
@@ -72,7 +83,7 @@ class ReservationApiControllerTest extends BaseControllerUnitTest {
         when(reservationService.reserve(any(ReservationCommand.class))).thenReturn(result);
 
         // when & then
-        ReservationResponse response = RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
+        ReservationResponse response = RestAssuredMockMvc.given().spec(authenticatedSpec(PRINCIPAL)).log().all()
                 .body(body)
                 .when().post("/api/reservations")
                 .then().log().all()
@@ -81,6 +92,8 @@ class ReservationApiControllerTest extends BaseControllerUnitTest {
                 });
 
         assertThat(response).isEqualTo(ReservationResponse.from(result));
+        verify(reservationService, times(1))
+                .reserve(argThat(command -> command.name().equals(PRINCIPAL.name())));
     }
 
     @Test
@@ -92,8 +105,7 @@ class ReservationApiControllerTest extends BaseControllerUnitTest {
         when(reservationQuery.search(any(ReservationSearchCondition.class), any(Pageable.class))).thenReturn(result);
 
         // when
-        Page<ReservationSearchResponse> response = RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
-                .params("name", "이프")
+        Page<ReservationSearchResponse> response = RestAssuredMockMvc.given().spec(authenticatedSpec(PRINCIPAL)).log().all()
                 .when().get("/api/reservations")
                 .then().log().all()
                 .status(HttpStatus.OK)
@@ -102,22 +114,14 @@ class ReservationApiControllerTest extends BaseControllerUnitTest {
 
         // then
         assertThat(response).isEqualTo(result);
-    }
-
-    @Test
-    void 사용자_이름_정보없이_예약_목록을_조회한다면_예외가_발생한다() {
-        // when
-        RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
-                .when().get("/api/reservations")
-                .then().log().all()
-                .status(HttpStatus.BAD_REQUEST)
-                .body(containsString("[name] 예약 정보 검색 시 사용자 명이 필요합니다."));
+        verify(reservationQuery, times(1))
+                .search(argThat(condition -> condition.name().equals(PRINCIPAL.name())), any(Pageable.class));
     }
 
     @Test
     void 사용자가_예약_취소에_성공하면_삭제_로직_수행_후_204_noContent를_반환한다() {
         // when & then
-        RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
+        RestAssuredMockMvc.given().spec(authenticatedSpec(PRINCIPAL)).log().all()
                 .when().delete("/api/reservations/{id}", 1L)
                 .then().log().all()
                 .status(HttpStatus.NO_CONTENT);
@@ -128,7 +132,7 @@ class ReservationApiControllerTest extends BaseControllerUnitTest {
     @ValueSource(ints = {-1, 0})
     void 사용자가_예약_취소시_식별자가_양수가_아니라면_400_Bad_Request를_반환한다(int invalidId) {
         // when & then
-        RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
+        RestAssuredMockMvc.given().spec(authenticatedSpec(PRINCIPAL)).log().all()
                 .when().delete("/api/reservations/{id}", invalidId)
                 .then().log().all()
                 .status(HttpStatus.BAD_REQUEST)
@@ -143,7 +147,7 @@ class ReservationApiControllerTest extends BaseControllerUnitTest {
         when(reservationService.change(anyLong(), any(ReservationCommand.class))).thenReturn(result);
 
         // when
-        ReservationResponse response = RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
+        ReservationResponse response = RestAssuredMockMvc.given().spec(authenticatedSpec(PRINCIPAL)).log().all()
                 .body(request)
                 .when().patch("/api/reservations/{id}", 1L)
                 .then().log().all()
@@ -153,5 +157,7 @@ class ReservationApiControllerTest extends BaseControllerUnitTest {
 
         // then
         assertThat(response).isEqualTo(ReservationResponse.from(result));
+        verify(reservationService, times(1))
+                .change(anyLong(), argThat(command -> command.name().equals(PRINCIPAL.name())));
     }
 }

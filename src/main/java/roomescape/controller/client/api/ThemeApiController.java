@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.client.api.dto.ThemeResponse;
 import roomescape.controller.client.api.dto.ThemeTimesResponse;
+import roomescape.global.auth.PreAuth;
 import roomescape.service.ThemeService;
 
 @RestController
@@ -23,6 +24,7 @@ public class ThemeApiController {
 
     private final ThemeService themeService;
 
+    @PreAuth
     @GetMapping("/{id}/times")
     public ResponseEntity<List<ThemeTimesResponse>> getThemeReservationStatus(
             @PathVariable

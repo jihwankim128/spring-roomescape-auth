@@ -26,6 +26,7 @@ import roomescape.controller.admin.api.AdminReservationApiController;
 import roomescape.controller.admin.api.dto.AdminReservationRequest;
 import roomescape.controller.admin.api.dto.AdminReservationResponse;
 import roomescape.controller.admin.fixture.AdminReservationApiRequestFixture;
+import roomescape.repository.MemberRepository;
 import roomescape.service.ReservationService;
 import roomescape.service.command.ReservationCommand;
 import roomescape.service.fixture.ReservationServiceFixture;
@@ -36,10 +37,13 @@ class AdminReservationApiControllerTest extends BaseControllerUnitTest {
 
     @MockitoBean
     private ReservationService reservationService;
+    @MockitoBean
+    private MemberRepository memberRepository;
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext) {
         mockMvcSetting(webApplicationContext);
+        mockAdmin(memberRepository);
     }
 
     @ParameterizedTest(name = "요청 정보가 {0} 일 때, 예외 메세지 \"{1}\"가 발생한다.")
@@ -47,7 +51,7 @@ class AdminReservationApiControllerTest extends BaseControllerUnitTest {
     void 예약_요청_시_형식_검증에_실패하면_예외가_발생한다(AdminReservationRequest body, String exceptionMessage) {
         // given: 실패하는 request body가 주어짐
         // when & then
-        RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
+        RestAssuredMockMvc.given().spec(adminSpec()).log().all()
                 .body(body)
                 .when().post("/api/admin/reservations")
                 .then().log().all()
@@ -63,7 +67,7 @@ class AdminReservationApiControllerTest extends BaseControllerUnitTest {
         when(reservationService.reserve(any(ReservationCommand.class))).thenReturn(result);
 
         // when & then
-        AdminReservationResponse response = RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
+        AdminReservationResponse response = RestAssuredMockMvc.given().spec(adminSpec()).log().all()
                 .body(body)
                 .when().post("/api/admin/reservations")
                 .then().log().all()
@@ -78,7 +82,7 @@ class AdminReservationApiControllerTest extends BaseControllerUnitTest {
     @ValueSource(ints = {0, -1})
     void 예약_취소를_요청하는_예약_Id가_양수가_아니라면_예외가_발생한다(int reservationId) {
         // when & then
-        RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
+        RestAssuredMockMvc.given().spec(adminSpec()).log().all()
                 .when().delete("/api/admin/reservations/" + reservationId)
                 .then().log().all()
                 .status(HttpStatus.BAD_REQUEST)
@@ -88,7 +92,7 @@ class AdminReservationApiControllerTest extends BaseControllerUnitTest {
     @Test
     void 정상적인_예약_ID로_예약_취소_요청시_204_응답을_한다() {
         // when & then
-        RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
+        RestAssuredMockMvc.given().spec(adminSpec()).log().all()
                 .when().delete("/api/admin/reservations/1")
                 .then().log().all()
                 .status(HttpStatus.NO_CONTENT);
@@ -102,7 +106,7 @@ class AdminReservationApiControllerTest extends BaseControllerUnitTest {
         when(reservationService.getAllReservations()).thenReturn(result);
         
         // when & then
-        RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
+        RestAssuredMockMvc.given().spec(adminSpec()).log().all()
                 .when().get("/api/admin/reservations")
                 .then().log().all()
                 .status(HttpStatus.OK)

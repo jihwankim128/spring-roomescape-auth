@@ -40,7 +40,7 @@ class MemberApiControllerTest extends BaseControllerUnitTest {
     void 이름으로_회원가입_요청에_성공하면_정상_응답이_반환된다() {
         // given
         MemberSignUpRequest request = new MemberSignUpRequest("바니");
-        MemberResult result = new MemberResult(1L, "바니", MemberRole.USER);
+        MemberResult result = new MemberResult(1L, "바니", MemberRole.MEMBER);
         when(memberService.signUp(any(MemberSignUpCommand.class))).thenReturn(result);
 
         // when & then

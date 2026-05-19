@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import roomescape.common.MemberPrincipal;
+import roomescape.global.auth.MemberPrincipal;
 import roomescape.domain.EntityNotFoundException;
 import roomescape.repository.MemberRepository;
 import roomescape.service.command.LoginCommand;

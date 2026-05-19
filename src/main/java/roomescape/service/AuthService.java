@@ -3,7 +3,7 @@ package roomescape.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.common.MemberPrincipal;
+import roomescape.global.auth.MemberPrincipal;
 import roomescape.domain.EntityNotFoundException;
 import roomescape.domain.Member;
 import roomescape.repository.MemberRepository;

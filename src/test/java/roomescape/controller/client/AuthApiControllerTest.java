@@ -15,7 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.context.WebApplicationContext;
-import roomescape.common.MemberPrincipal;
+import roomescape.global.auth.MemberPrincipal;
 import roomescape.controller.BaseControllerUnitTest;
 import roomescape.controller.client.api.AuthApiController;
 import roomescape.controller.client.api.dto.LoginRequest;

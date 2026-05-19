@@ -19,11 +19,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.context.WebApplicationContext;
+import roomescape.global.auth.MemberPrincipal;
 import roomescape.controller.BaseControllerUnitTest;
 import roomescape.controller.client.api.ThemeApiController;
 import roomescape.controller.client.api.dto.ThemeResponse;
 import roomescape.controller.client.api.dto.ThemeTimesResponse;
+import roomescape.domain.Member;
+import roomescape.domain.MemberRole;
 import roomescape.domain.fixture.ThemeFixture;
+import roomescape.repository.MemberRepository;
 import roomescape.service.ThemeService;
 import roomescape.service.result.ThemeResult;
 import roomescape.service.result.ThemeTimesResult;
@@ -31,12 +35,18 @@ import roomescape.service.result.ThemeTimesResult;
 @WebMvcTest(ThemeApiController.class)
 class ThemeApiControllerTest extends BaseControllerUnitTest {
 
+    private static final MemberPrincipal PRINCIPAL = new MemberPrincipal("이프");
+
     @MockitoBean
     private ThemeService themeService;
+    @MockitoBean
+    private MemberRepository memberRepository;
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext) {
         mockMvcSetting(webApplicationContext);
+        when(memberRepository.findByName(PRINCIPAL.name()))
+                .thenReturn(java.util.Optional.of(new Member(1L, PRINCIPAL.name(), MemberRole.MEMBER)));
     }
 
     @Test
@@ -46,7 +56,7 @@ class ThemeApiControllerTest extends BaseControllerUnitTest {
         when(themeService.getThemeReservationStatus(anyLong(), any(LocalDate.class))).thenReturn(List.of(result));
 
         // when & then
-        List<ThemeTimesResponse> response = RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
+        List<ThemeTimesResponse> response = RestAssuredMockMvc.given().spec(authenticatedSpec(PRINCIPAL)).log().all()
                 .queryParam("date", "2026-05-06")
                 .when().get("/api/themes/{id}/times", 1L)
                 .then().log().all()
@@ -61,7 +71,7 @@ class ThemeApiControllerTest extends BaseControllerUnitTest {
     @ValueSource(longs = {-1, 0})
     void 테마_조회_요청시_테마_식별자가_양수가_아니라면_400_BAD_REQUEST(long invalidThemeId) {
         // when & then
-        RestAssuredMockMvc.given().spec(defaultSpec()).log().all()
+        RestAssuredMockMvc.given().spec(authenticatedSpec(PRINCIPAL)).log().all()
                 .queryParam("date", "2026-05-06")
                 .when().get("/api/themes/{id}/times", invalidThemeId)
                 .then().log().all()

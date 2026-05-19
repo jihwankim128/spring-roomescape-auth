@@ -34,7 +34,7 @@ class MemberServiceTest {
         // then
         assertThat(result)
                 .extracting(MemberResult::id, MemberResult::name, MemberResult::role)
-                .containsExactly(1L, "이프", MemberRole.USER);
+                .containsExactly(1L, "이프", MemberRole.MEMBER);
     }
 
     @Test

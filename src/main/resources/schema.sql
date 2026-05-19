@@ -12,7 +12,7 @@ CREATE TABLE theme
 CREATE TABLE member (
     id   BIGINT      NOT NULL AUTO_INCREMENT,
     name VARCHAR(20) NOT NULL,
-    role VARCHAR(20) NOT NULL DEFAULT 'USER',
+    role VARCHAR(20) NOT NULL DEFAULT 'MEMBER',
     PRIMARY KEY (id),
     CONSTRAINT uk_member_name UNIQUE (name)
 );
