@@ -13,6 +13,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import roomescape.domain.DuplicateEntityException;
 import roomescape.domain.EntityNotFoundException;
 import roomescape.global.auth.ForbiddenException;
@@ -38,6 +39,10 @@ public class RestExceptionHandler {
     public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public void handleNoResourceFoundException() {
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
