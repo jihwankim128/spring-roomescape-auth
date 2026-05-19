@@ -18,7 +18,10 @@
         <a href="/">홈</a>
         <a class="active" href="/reserve">예약하기</a>
         <a href="/search">예약확인</a>
-        <a href="/admin">관리자</a>
+        <a data-nav-login href="/login">로그인</a>
+        <a data-nav-signup href="/signup">회원가입</a>
+        <span class="nav-user" data-nav-user hidden></span>
+        <a data-nav-admin href="/admin" hidden>관리자</a>
       </div>
     </div>
   </nav>
@@ -32,11 +35,6 @@
         <select id="themeSelect" name="themeId">
           <option value="">테마를 선택하세요</option>
         </select>
-      </section>
-
-      <section class="card">
-        <div class="card-label">예약자 이름</div>
-        <input class="text-input" id="nameInput" maxlength="20" name="name" placeholder="이름을 입력하세요" type="text" />
       </section>
 
       <section class="card">
@@ -57,6 +55,7 @@
 
   <div class="toast" data-role="toast"></div>
 
-  <script src="/js/reservation/main.js" type="module"></script>
+  <script src="/js/common/nav.js?v=session-auth" type="module"></script>
+  <script src="/js/reservation/main.js?v=session-auth" type="module"></script>
 </body>
 </html>

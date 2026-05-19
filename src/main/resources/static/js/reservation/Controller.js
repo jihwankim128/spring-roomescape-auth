@@ -35,11 +35,6 @@ export default class Controller {
       }
     });
 
-    this.views.formView.on("@namechange", (event) => {
-      this.store.setName(event.detail.name);
-      this.render();
-    });
-
     this.views.slotGridView.on("@slotselect", (event) => {
       this.store.setSelectedTimeId(event.detail.timeId);
       this.render();
@@ -86,7 +81,6 @@ export default class Controller {
     this.views.formView.sync({
       selectedThemeId: this.store.selectedThemeId,
       selectedDate: this.store.selectedDate,
-      name: this.store.name,
       canSubmit: this.store.canSubmit(),
       readonly: this.store.readonly
     });

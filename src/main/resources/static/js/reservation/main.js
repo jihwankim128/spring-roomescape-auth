@@ -1,9 +1,9 @@
 import { qs } from "../common/helpers.js";
-import Controller from "./Controller.js";
-import Store from "./Store.js";
-import ReservationFormView from "./views/ReservationFormView.js";
-import SlotGridView from "./views/SlotGridView.js";
-import ToastView from "./views/ToastView.js";
+import Controller from "./Controller.js?v=session-auth";
+import Store from "./Store.js?v=session-auth";
+import ReservationFormView from "./views/ReservationFormView.js?v=session-auth";
+import SlotGridView from "./views/SlotGridView.js?v=session-auth";
+import ToastView from "./views/ToastView.js?v=session-auth";
 
 document.addEventListener("DOMContentLoaded", () => {
   const store = new Store();

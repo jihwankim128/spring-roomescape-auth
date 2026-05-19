@@ -5,12 +5,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.global.auth.MemberPrincipal;
+import roomescape.controller.client.api.dto.AuthResponse;
 import roomescape.controller.client.api.dto.LoginRequest;
+import roomescape.global.auth.MemberPrincipal;
 import roomescape.service.AuthService;
 
 @RestController
@@ -27,5 +29,10 @@ public class AuthApiController {
         session.setAttribute(MemberPrincipal.SESSION_KEY, principal);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<AuthResponse> me(MemberPrincipal principal) {
+        return ResponseEntity.ok(AuthResponse.from(authService.getMember(principal)));
     }
 }

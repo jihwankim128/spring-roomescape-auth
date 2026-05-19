@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>RoomEscape</title>
+  <title>로그인 · RoomEscape</title>
   <link href="https://fonts.googleapis.com" rel="preconnect" />
   <link crossorigin href="https://fonts.gstatic.com" rel="preconnect" />
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link href="/styles/common.css" rel="stylesheet" />
-  <link href="/styles/index.css" rel="stylesheet" />
+  <link href="/styles/login.css" rel="stylesheet" />
 </head>
 <body>
   <nav class="top-nav">
     <div class="nav-inner">
       <a class="nav-logo" href="/">RoomEscape</a>
       <div class="nav-links">
-        <a class="active" href="/">홈</a>
+        <a href="/">홈</a>
         <a href="/reserve">예약하기</a>
         <a href="/search">예약확인</a>
-        <a data-nav-login href="/login">로그인</a>
+        <a class="active" data-nav-login href="/login">로그인</a>
         <a data-nav-signup href="/signup">회원가입</a>
         <span class="nav-user" data-nav-user hidden></span>
         <a data-nav-admin href="/admin" hidden>관리자</a>
@@ -26,28 +26,18 @@
     </div>
   </nav>
 
-  <main class="index-page">
-    <section>
-      <div class="section-header">
-        <h2 class="section-title">이번 주 인기 테마</h2>
-        <span class="section-sub">최근 7일 기준</span>
-      </div>
-      <div class="popular-scroll" data-role="popular-list">
-        <div class="state-box">불러오는 중...</div>
-      </div>
-    </section>
-
-    <section class="divider">
-      <div class="section-header">
-        <h2 class="section-title">전체 테마</h2>
-      </div>
-      <div class="theme-grid" data-role="theme-grid">
-        <div class="state-box state-grid">불러오는 중...</div>
-      </div>
-    </section>
+  <main class="login-page">
+    <form class="login-form" data-role="login-form">
+      <h1 class="page-title">로그인</h1>
+      <label for="loginName">이름</label>
+      <input id="loginName" maxlength="20" name="name" placeholder="이름을 입력하세요" type="text" />
+      <button type="submit">로그인</button>
+      <a class="form-link" href="/signup">회원가입</a>
+      <div class="login-message" data-role="login-message"></div>
+    </form>
   </main>
 
   <script src="/js/common/nav.js" type="module"></script>
-  <script src="/js/index/main.js" type="module"></script>
+  <script src="/js/login/main.js" type="module"></script>
 </body>
 </html>

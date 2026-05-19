@@ -6,7 +6,6 @@ export default class ReservationFormView extends View {
     super(element);
 
     this.themeSelect = qs("#themeSelect", element);
-    this.nameInput = qs("#nameInput", element);
     this.dateInput = qs("#dateInput", element);
     this.submitButton = qs('[data-role="submit-button"]', element);
 
@@ -20,10 +19,6 @@ export default class ReservationFormView extends View {
 
     on(this.dateInput, "change", () => {
       this.emit("@datechange", { date: this.dateInput.value });
-    });
-
-    on(this.nameInput, "input", () => {
-      this.emit("@namechange", { name: this.nameInput.value });
     });
 
     on(this.element, "submit", (event) => {
@@ -54,13 +49,11 @@ export default class ReservationFormView extends View {
     }
   }
 
-  sync({ selectedThemeId, selectedDate, name, canSubmit, readonly }) {
+  sync({ selectedThemeId, selectedDate, canSubmit, readonly }) {
     this.themeSelect.value = selectedThemeId || "";
     this.dateInput.value = selectedDate || this.dateInput.value;
-    this.nameInput.value = name;
 
     this.themeSelect.disabled = readonly;
-    this.nameInput.disabled = readonly;
 
     this.submitButton.disabled = !canSubmit;
   }

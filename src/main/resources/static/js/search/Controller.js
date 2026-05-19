@@ -7,9 +7,9 @@ export default class Controller {
     }
 
     subscribeViewEvents() {
-        this.views.formView.on("@search", async (event) => {
+        this.views.formView.on("@search", async () => {
             try {
-                await this.store.search(event.detail.name);
+                await this.store.search();
 
                 if (!this.store.page.content.length) {
                     this.views.toastView.show("예약 내역이 없습니다.");
@@ -35,15 +35,16 @@ export default class Controller {
         });
     }
 
-    initialize() {
+    async initialize() {
+        try {
+            await this.store.search();
+        } catch (error) {
+            this.views.toastView.show(error.message);
+        }
         this.render();
     }
 
     render() {
-        this.views.formView.sync({
-            name: this.store.name
-        });
-
         this.views.resultView.render(this.store.page);
     }
 }

@@ -22,4 +22,10 @@ public class AuthService {
 
         return new MemberPrincipal(member.getName());
     }
+
+    @Transactional(readOnly = true)
+    public Member getMember(MemberPrincipal principal) {
+        return memberRepository.findByName(principal.name())
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
+    }
 }

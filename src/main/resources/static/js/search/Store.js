@@ -2,13 +2,11 @@ import {cancelReservation, searchReservations} from "./api.js";
 
 export default class Store {
     constructor() {
-        this.name = "";
         this.page = null;
     }
 
-    async search(name, page = 1) {
-        this.name = name;
-        this.page = await searchReservations(name, page);
+    async search(page = 1) {
+        this.page = await searchReservations(page);
     }
 
     async cancel(id) {

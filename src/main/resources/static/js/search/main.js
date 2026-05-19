@@ -1,11 +1,11 @@
 import {qs} from "../common/helpers.js";
 
-import Store from "./Store.js";
-import Controller from "./Controller.js";
+import Store from "./Store.js?v=session-auth";
+import Controller from "./Controller.js?v=session-auth";
 
-import SearchFormView from "./views/SearchFormView.js";
-import SearchResultView from "./views/SearchResultView.js";
-import ToastView from "./views/ToastView.js";
+import SearchFormView from "./views/SearchFormView.js?v=session-auth";
+import SearchResultView from "./views/SearchResultView.js?v=session-auth";
+import ToastView from "./views/ToastView.js?v=session-auth";
 
 document.addEventListener("DOMContentLoaded", () => {
     const store = new Store();

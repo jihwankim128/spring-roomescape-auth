@@ -1,6 +1,7 @@
 package roomescape.controller.client;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -19,6 +20,8 @@ import roomescape.global.auth.MemberPrincipal;
 import roomescape.controller.BaseControllerUnitTest;
 import roomescape.controller.client.api.AuthApiController;
 import roomescape.controller.client.api.dto.LoginRequest;
+import roomescape.domain.Member;
+import roomescape.domain.MemberRole;
 import roomescape.service.AuthService;
 import roomescape.service.command.LoginCommand;
 
@@ -54,6 +57,21 @@ class AuthApiControllerTest extends BaseControllerUnitTest {
         // then
         assertThat(session).isNotNull();
         assertThat(session.getAttribute(MemberPrincipal.SESSION_KEY)).isEqualTo(principal);
+    }
+
+    @Test
+    void 로그인된_멤버_정보를_조회한다() {
+        // given
+        MemberPrincipal principal = new MemberPrincipal("이프");
+        when(authService.getMember(principal)).thenReturn(new Member(1L, "이프", MemberRole.MEMBER));
+
+        // when & then
+        RestAssuredMockMvc.given().spec(authenticatedSpec(principal)).log().all()
+                .when().get("/api/auth/me")
+                .then().log().all()
+                .status(HttpStatus.OK)
+                .body("name", equalTo("이프"))
+                .body("role", equalTo("MEMBER"));
     }
 
     @ParameterizedTest

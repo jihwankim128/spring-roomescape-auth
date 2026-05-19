@@ -1,8 +1,8 @@
 import {requestJson} from "../common/http.js";
 
-export function searchReservations(name, page = 1, size = 20) {
+export function searchReservations(page = 1, size = 20) {
     return requestJson(
-        `/api/reservations?name=${encodeURIComponent(name)}&page=${page}&size=${size}`
+        `/api/reservations?page=${page}&size=${size}`
     );
 }
 

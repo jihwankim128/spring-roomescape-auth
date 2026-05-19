@@ -82,6 +82,34 @@ select {
   color: var(--accent);
 }
 
+.nav-links [hidden] {
+  display: none;
+}
+
+.nav-user {
+  display: inline-flex;
+  align-items: center;
+  max-width: 140px;
+  min-height: 32px;
+  border: 1px solid #d6e9ff;
+  border-radius: 999px;
+  background: #ebf3ff;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  overflow: hidden;
+  padding: 0 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-user::after {
+  content: "님";
+  margin-left: 1px;
+  font-weight: 600;
+}
+
 .toast {
   position: fixed;
   bottom: 32px;

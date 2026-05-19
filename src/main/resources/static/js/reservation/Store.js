@@ -8,7 +8,6 @@ export default class Store {
     this.selectedThemeId = getSearchParam("themeId") || "";
     this.selectedDate = "";
     this.selectedTimeId = null;
-    this.name = "";
     this.reservationId = getSearchParam("id");
     this.readonly = false;
   }
@@ -22,7 +21,6 @@ export default class Store {
       this.selectedThemeId = reservation.themeId;
       this.selectedDate = reservation.date;
       this.selectedTimeId = reservation.time.id;
-      this.name = reservation.name;
       this.readonly = true;
 
       await this.loadSlots();
@@ -53,10 +51,6 @@ export default class Store {
     this.selectedTimeId = null;
   }
 
-  setName(name) {
-    this.name = name.trim();
-  }
-
   setSelectedTimeId(timeId) {
     this.selectedTimeId = timeId;
   }
@@ -65,14 +59,12 @@ export default class Store {
     return Boolean(
         this.selectedThemeId &&
         this.selectedDate &&
-        this.name &&
         this.selectedTimeId
     );
   }
 
   submit() {
     const payload = {
-      name: this.name,
       date: this.selectedDate,
       themeId: Number(this.selectedThemeId),
       timeId: this.selectedTimeId

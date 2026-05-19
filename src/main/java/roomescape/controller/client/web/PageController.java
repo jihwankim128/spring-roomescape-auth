@@ -23,6 +23,16 @@ public class PageController {
         return "forward:/index.html";
     }
 
+    @GetMapping("/login")
+    public String login() {
+        return "forward:/login.html";
+    }
+
+    @GetMapping("/signup")
+    public String signup() {
+        return "forward:/signup.html";
+    }
+
     @PreAuth
     @GetMapping("/search")
     public String search() {
